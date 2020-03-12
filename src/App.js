@@ -1,26 +1,78 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Person from "./components/Person";
+import phonebook from "./services/phonebook";
 
-function App() {
+const App = () => {
+  //states
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [newFilterName, setNewFilterName] = useState("");
+  const [showAll, setShowAll] = useState(true);
+
+  //fetch data
+  useEffect(() => {
+    phonebook.getAll().then(data => setPersons(data));
+  }, []);
+  //Create new Entry
+  const addPerson = event => {
+    event.preventDefault();
+    const newEntry = {
+      name: newName,
+      number: newNumber
+    };
+    phonebook.create(newEntry).then(initialEntries => {
+      setPersons(persons.concat(newEntry));
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  //update Entry
+
+  //Delete Entry
+
+  //handlers
+  const handleNameChange = event => setNewName(event.target.value);
+  const handleNumberChange = event => setNewNumber(event.target.value);
+  const handleFilterNameChange = event => {
+    setNewFilterName(event.target.value);
+    setShowAll(false);
+  };
+
+  //use regex to filter
+  const personsToShow = showAll
+    ? persons
+    : persons.filter(person => person.name === newFilterName);
+  const rows = personsToShow.map(person => {
+    return (
+      <Person key={person.name} name={person.name} number={person.number} />
+    );
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Phonebook</h2>
+      <div>
+        Filter:{" "}
+        <input value={newFilterName} onChange={handleFilterNameChange} />
+      </div>
+      <h2>Add a new</h2>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input value={newName} onChange={handleNameChange} />
+        </div>
+        <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      <div>{rows}</div>
     </div>
   );
-}
+};
 
 export default App;
