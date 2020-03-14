@@ -6,34 +6,19 @@
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
     },
     {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
+      "name": "test",
+      "number": "213131",
       "id": 4
     },
     {
-      "name": "test1",
-      "number": "47374372",
+      "name": "test3",
+      "number": "123432",
       "id": 5
-    },
-    {
-      "name": "Test2",
-      "number": "345757347",
-      "id": 6
-    },
-    {
-      "name": "Test3",
-      "number": "47457448",
-      "id": 7
     }
   ]
 }

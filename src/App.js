@@ -21,16 +21,41 @@ const App = () => {
       name: newName,
       number: newNumber
     };
-    phonebook.create(newEntry).then(initialEntries => {
-      setPersons(persons.concat(newEntry));
-      setNewName("");
-      setNewNumber("");
-    });
+    //check if name already exists, if number is different then update else do nothing
+    const findPerson = persons.find(
+      entry => entry.name === newEntry.name && entry.number !== newEntry.number
+    );
+    if (findPerson) {
+      const changedPerson = { ...findPerson, number: newEntry.number };
+      phonebook
+        .update(findPerson.id, changedPerson)
+        .then(returnedPerson =>
+          setPersons(
+            persons.map(person =>
+              person.id !== findPerson.id ? person : returnedPerson
+            )
+          )
+        );
+      //then update
+    } else {
+      phonebook.create(newEntry).then(initialEntries => {
+        setPersons(persons.concat(initialEntries));
+        setNewName("");
+        setNewNumber("");
+      });
+    }
   };
 
-  //update Entry
-
   //Delete Entry
+  const deletePerson = event => {
+    console.log(event.target.value);
+    const findPerson = persons.find(entry => entry.name === event.target.value);
+    console.log(findPerson);
+    console.log(findPerson.id);
+    phonebook.deleteEntry(findPerson.id).then(empty => {
+      phonebook.getAll().then(data => setPersons(data));
+    });
+  };
 
   //handlers
   const handleNameChange = event => setNewName(event.target.value);
@@ -46,7 +71,14 @@ const App = () => {
     : persons.filter(person => person.name === newFilterName);
   const rows = personsToShow.map(person => {
     return (
-      <Person key={person.name} name={person.name} number={person.number} />
+      <div>
+        <Person
+          key={person.name}
+          name={person.name}
+          number={person.number}
+          handleDelete={deletePerson}
+        />
+      </div>
     );
   });
 
