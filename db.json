@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
@@ -19,6 +14,16 @@
       "name": "test3",
       "number": "123432",
       "id": 5
+    },
+    {
+      "name": "Yash Patel",
+      "number": "9106377186",
+      "id": 6
+    },
+    {
+      "name": "Harshad Patel",
+      "number": "9925208189",
+      "id": 7
     }
   ]
 }

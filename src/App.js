@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Person from "./components/Person";
 import phonebook from "./services/phonebook";
+import Notification from "./components/Notification";
 
 const App = () => {
   //states
@@ -9,6 +10,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [newFilterName, setNewFilterName] = useState("");
   const [showAll, setShowAll] = useState(true);
+  const [notifMessage, setNotifMessage] = useState([true, "Read successful"]);
 
   //fetch data
   useEffect(() => {
@@ -29,17 +31,20 @@ const App = () => {
       const changedPerson = { ...findPerson, number: newEntry.number };
       phonebook
         .update(findPerson.id, changedPerson)
-        .then(returnedPerson =>
+        .then(returnedPerson => {
           setPersons(
             persons.map(person =>
               person.id !== findPerson.id ? person : returnedPerson
             )
-          )
-        );
+          );
+          setNotifMessage([true, "Update successful"]);
+        })
+        .catch();
       //then update
     } else {
       phonebook.create(newEntry).then(initialEntries => {
         setPersons(persons.concat(initialEntries));
+        setNotifMessage([true, "Create successful"]);
         setNewName("");
         setNewNumber("");
       });
@@ -48,11 +53,9 @@ const App = () => {
 
   //Delete Entry
   const deletePerson = event => {
-    console.log(event.target.value);
     const findPerson = persons.find(entry => entry.name === event.target.value);
-    console.log(findPerson);
-    console.log(findPerson.id);
     phonebook.deleteEntry(findPerson.id).then(empty => {
+      setNotifMessage([true, "Delete successful"]);
       phonebook.getAll().then(data => setPersons(data));
     });
   };
@@ -85,6 +88,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notifMessage} />
       <div>
         Filter:{" "}
         <input value={newFilterName} onChange={handleFilterNameChange} />
